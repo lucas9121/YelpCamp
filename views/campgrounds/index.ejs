@@ -16,7 +16,7 @@
         <h1>All Campgrounds</h1>
         <ul>
             <% for(let campground of campgrounds) {%>
-            <li><%= campground.title %></li>
+            <li><a href="/campground/<%=campground._id %>"><%= campground.title %></a></li>
             <% } %>
         </ul>
         <script src="" async defer></script>
