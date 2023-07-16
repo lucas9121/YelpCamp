@@ -64,7 +64,9 @@ app.get('/campgrounds/:id/edit', async(req, res) => {
 
 app.put('/campgrounds/:id', async (req, res) => {
     const {id} = req.params
-    const campgground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {new: true})
+    // "run validators " update the document according to the schema rules.
+    // "new" returns the updated document, rather than the original
+    const campgground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {runValidators: true}, {new: true})
     res.redirect(`/campgrounds/${campgground._id}`)
 })
 
