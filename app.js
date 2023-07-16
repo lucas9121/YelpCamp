@@ -34,16 +34,16 @@ app.use(methodOverride('_method'))
 
 
 app.get('/', (req, res) => {
-    res.render('home')
+    res.render('home', {what: 'Home'})
 })
 
 app.get('/campgrounds', async(req, res) => {
     const campgrounds = await Campground.find({})
-    res.render('campgrounds/index', {campgrounds})
+    res.render('campgrounds/index', { what: "All Campgounds", campgrounds})
 })
 
 app.get('/campgrounds/new', (req, res) => {
-    res.render('campgrounds/new')
+    res.render('campgrounds/new', {what: "Add Campground"})
 })
 
 app.post('/campgrounds', async (req, res) => {
@@ -56,12 +56,12 @@ app.post('/campgrounds', async (req, res) => {
 app.get('/campgrounds/:id', async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     // console.log(campground)
-    res.render('campgrounds/show', {campground})
+    res.render('campgrounds/show', {campground, what: campground.title})
 })
 
 app.get('/campgrounds/:id/edit', async(req, res) => {
     const campground = await Campground.findById(req.params.id)
-    res.render('campgrounds/edit', { campground})
+    res.render('campgrounds/edit', {what: `Update ${campground.title}`, campground})
 })
 
 app.put('/campgrounds/:id', async (req, res) => {
