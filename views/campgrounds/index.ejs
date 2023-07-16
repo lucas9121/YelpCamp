@@ -17,7 +17,7 @@
         <a href="/campgrounds/new">New Campground</a>
         <ul>
             <% for(let campground of campgrounds) {%>
-            <li><a href="/campground/<%=campground._id %>"><%= campground.title %></a></li>
+            <li><a href="/campgrounds/<%=campground._id %>"><%= campground.title %></a></li>
             <% } %>
         </ul>
         <script src="" async defer></script>
