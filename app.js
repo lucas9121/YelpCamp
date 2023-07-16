@@ -35,7 +35,9 @@ app.get('/campgrounds', async(req, res) => {
 })
 
 app.get('/campground/:id', async (req, res) => {
-    res.render('campgrounds/show')
+    const campground = await Campground.findById(req.params.id)
+    // console.log(campground)
+    res.render('campgrounds/show', {campground})
 })
 
 app.listen(PORT, () => {
