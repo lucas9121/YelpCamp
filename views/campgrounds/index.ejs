@@ -14,6 +14,7 @@
     </head>
     <body>
         <h1>All Campgrounds</h1>
+        <a href="/campgrounds/new">New Campground</a>
         <ul>
             <% for(let campground of campgrounds) {%>
             <li><a href="/campground/<%=campground._id %>"><%= campground.title %></a></li>
