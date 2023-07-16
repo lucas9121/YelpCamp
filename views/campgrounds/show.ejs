@@ -13,6 +13,9 @@
        <h2><%= campground.location %></h2>
        <a href="/campgrounds/<%= campground._id %>/edit">Edit</a>
        <br>
+       <br>
+       <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST"><button>Delete</button></form>
+       <br>
        <a href="/campgrounds">All Campgrounds</a>
         
         <script src="" async defer></script>
