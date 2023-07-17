@@ -81,7 +81,6 @@ app.delete('/campgrounds/:id', async (req, res) => {
 
 
 
-
 app.listen(PORT, () => {
     console.log(`serving on port ${PORT}`)
 })
