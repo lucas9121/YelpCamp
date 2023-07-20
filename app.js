@@ -89,8 +89,10 @@ app.all('*', (req, res, next) => {
 
 // Error Handler
 app.use((err, req, res, next) => {
-    const {statusCode = 500, message = 'Something went wrong!'} = err;
-    res.status(statusCode).send(message)
+    const {statusCode = 500} = err;
+    if(!err.message) err.message = 'Oh No! Something went wrong.'
+    console.log(err.stack)
+    res.status(statusCode).render('error', { err, what: 'Error'})
 })
 
 
