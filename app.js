@@ -4,6 +4,7 @@ const app = express()
 const path = require('path')
 const mongoose = require('mongoose')
 const ejsMate = require('ejs-mate')
+const catchAsync = require('./utils/catchAsync')
 const methodOverride = require('method-override')
 const PORT = process.env.port || 3000
 const Campground = require('./models/campground')
@@ -46,38 +47,43 @@ app.get('/campgrounds/new', (req, res) => {
     res.render('campgrounds/new', {what: "Add Campground"})
 })
 
-app.post('/campgrounds', async (req, res) => {
+app.post('/campgrounds', catchAsync(async (req, res, next) => {
     const newCampground = new Campground(req.body.campground)
     await newCampground.save()
     res.redirect(`/campgrounds/${newCampground._id}`)
-})
+}))
 
 
-app.get('/campgrounds/:id', async (req, res) => {
+app.get('/campgrounds/:id', catchAsync(async (req, res, next) => {
     const campground = await Campground.findById(req.params.id)
     // console.log(campground)
     res.render('campgrounds/show', {campground, what: campground.title})
-})
+}))
 
-app.get('/campgrounds/:id/edit', async(req, res) => {
+app.get('/campgrounds/:id/edit', catchAsync(async(req, res, next) => {
     const campground = await Campground.findById(req.params.id)
     res.render('campgrounds/edit', {what: `Update ${campground.title}`, campground})
-})
+}))
 
-app.put('/campgrounds/:id', async (req, res) => {
+app.put('/campgrounds/:id', catchAsync(async (req, res, next) => {
     const {id} = req.params
     // "run validators " update the document according to the schema rules.
     // "new" returns the updated document, rather than the original
     const campgground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {runValidators: true}, {new: true})
     res.redirect(`/campgrounds/${campgground._id}`)
-})
+}))
 
-app.delete('/campgrounds/:id', async (req, res) => {
+app.delete('/campgrounds/:id', catchAsync(async (req, res, next) => {
     const {id} = req.params;
     const campground = await Campground.findByIdAndDelete(id)
     res.redirect('/campgrounds')
-})
+}))
 
+// Error Handlers
+//catch all for any error
+app.use((err, req, res, next) => {
+    res.send('Oh boy, something went wrong!')
+})
 
 
 
