@@ -11,6 +11,7 @@ const methodOverride = require('method-override')
 const PORT = process.env.port || 3000
 const Campground = require('./models/campground')
 const Review = require('./models/review')
+const campgroundRoute = require('./routes/campground')
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -41,18 +42,9 @@ app.use(express.urlencoded({extended: true}))
 // tricks form into thinking other requets are post request
 app.use(methodOverride('_method'))
 
-// joi validation
-const validateCampground = (req, res, next) => {
-    // server side validation
-    const {error} = campgroundSchema.validate(req.body)
-    if(error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else {
-        next()
-    }
-}
 
+
+// joi validation
 const validateReview = (req, res, next) => {
     const {error} = reviewSchema.validate(req.body)
     if(error) {
@@ -63,52 +55,15 @@ const validateReview = (req, res, next) => {
     }
 }
 
+/////////////// CRUD operations ////////////////
+app.use('/campgrounds', campgroundRoute)
+
 
 /////////////// CRUD operations ////////////////
 app.get('/', (req, res) => {
     res.render('home', {what: 'Home'})
 })
 
-app.get('/campgrounds', async(req, res) => {
-    const campgrounds = await Campground.find({})
-    res.render('campgrounds/index', { what: "All Campgounds", campgrounds})
-})
-
-app.get('/campgrounds/new', (req, res) => {
-    res.render('campgrounds/new', {what: "Add Campground"})
-})
-
-app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
-    // if(!req.body.campgground) throw new ExpressError('Invalid Campground Data', 400)
-    const newCampground = new Campground(req.body.campground)
-    await newCampground.save()
-    res.redirect(`/campgrounds/${newCampground._id}`)
-}))
-
-
-app.get('/campgrounds/:id', catchAsync(async (req, res, next) => {
-    const campground = await Campground.findById(req.params.id).populate('reviews')
-    res.render('campgrounds/show', {campground, what: campground.title})
-}))
-
-app.get('/campgrounds/:id/edit', catchAsync(async(req, res, next) => {
-    const campground = await Campground.findById(req.params.id)
-    res.render('campgrounds/edit', {what: `Update ${campground.title}`, campground})
-}))
-
-app.put('/campgrounds/:id', validateCampground, catchAsync(async (req, res, next) => {
-    const {id} = req.params
-    // "run validators " update the document according to the schema rules.
-    // "new" returns the updated document, rather than the original
-    const campgground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {runValidators: true}, {new: true})
-    res.redirect(`/campgrounds/${campgground._id}`)
-}))
-
-app.delete('/campgrounds/:id', catchAsync(async (req, res, next) => {
-    const {id} = req.params;
-    const campground = await Campground.findByIdAndDelete(id)
-    res.redirect('/campgrounds')
-}))
 
 ///// Reviews
 app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
