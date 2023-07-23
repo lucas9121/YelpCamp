@@ -17,6 +17,7 @@ const CampgroundSchema = new Schema({
 })
 
 //https://mongoosejs.com/docs/middleware.html
+// Query Middleware
 CampgroundSchema.post('findOneAndDelete', async function (doc) {
     // if document was found and deleted
     if(doc){
