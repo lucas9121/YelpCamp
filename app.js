@@ -88,7 +88,6 @@ app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) =
 
 app.get('/campgrounds/:id', catchAsync(async (req, res, next) => {
     const campground = await Campground.findById(req.params.id).populate('reviews')
-    console.log(campground)
     res.render('campgrounds/show', {campground, what: campground.title})
 }))
 
@@ -111,7 +110,7 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res, next) => {
     res.redirect('/campgrounds')
 }))
 
-// Reviews
+///// Reviews
 app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     const review = new Review(req.body.review)
@@ -120,6 +119,16 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res)
     await campground.save()
     res.redirect(`/campgrounds/${campground._id}`)
 }))
+
+app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+    const {id, reviewId} = req.params
+    //$pull operator removes from an existing array all instances of a value that match the specified condition.
+    await Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}})
+    await Review.findByIdAndDelete(reviewId)
+    res.redirect(`/campgrounds/${id}`)
+}))
+
+
 
 //catch all
 app.all('*', (req, res, next) => {
