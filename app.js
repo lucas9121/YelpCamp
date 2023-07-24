@@ -4,9 +4,12 @@ const app = express()
 const path = require('path')
 const mongoose = require('mongoose')
 const ejsMate = require('ejs-mate')
+const session = require('express-session')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
 const PORT = process.env.port || 3000
+
+
 const campgroundRoute = require('./routes/campground')
 const reviewRoute = require('./routes/review')
 
@@ -40,6 +43,22 @@ app.use(express.urlencoded({extended: true}))
 app.use(methodOverride('_method'))
 //static assets for images and custom style sheets
 app.use(express.static(path.join(__dirname, 'public')))
+
+
+/////// using cookies ////////
+// https://owasp.org/www-community/
+const sessionConfig = {
+    secret:'testsecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true, // default is set to true
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    }
+
+}
+app.use(session(sessionConfig))
 
 
 
