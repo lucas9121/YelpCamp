@@ -4,13 +4,9 @@ const app = express()
 const path = require('path')
 const mongoose = require('mongoose')
 const ejsMate = require('ejs-mate')
-const {campgroundSchema, reviewSchema} = require('./schemas')
-const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
 const PORT = process.env.port || 3000
-const Campground = require('./models/campground')
-const Review = require('./models/review')
 const campgroundRoute = require('./routes/campground')
 const reviewRoute = require('./routes/review')
 
@@ -47,15 +43,12 @@ app.use(methodOverride('_method'))
 
 
 
-/////////////// CRUD operations ////////////////
+/////////////// Routes ////////////////
 app.use('/campgrounds', campgroundRoute)
 app.use('/', reviewRoute )
 
 
-/////////////// CRUD operations ////////////////
-app.get('/', (req, res) => {
-    res.render('home', {what: 'Home'})
-})
+
 
 
 
