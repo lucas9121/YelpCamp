@@ -38,6 +38,8 @@ app.use(express.urlencoded({extended: true}))
 
 // tricks form into thinking other requets are post request
 app.use(methodOverride('_method'))
+//static assets for images and custom style sheets
+app.use(express.static(path.join(__dirname, 'public')))
 
 
 
