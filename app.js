@@ -5,6 +5,7 @@ const path = require('path')
 const mongoose = require('mongoose')
 const ejsMate = require('ejs-mate')
 const session = require('express-session')
+const flash = require('connect-flash')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
 const PORT = process.env.port || 3000
@@ -59,6 +60,15 @@ const sessionConfig = {
 
 }
 app.use(session(sessionConfig))
+// flash messages
+app.use(flash())
+
+app.use((req, res, next) => {
+    // under every request will take flash and place under the key in locals
+    res.locals.success  = req.flash('success')
+    res.locals.error  = req.flash('error')
+    next()
+})
 
 
 
