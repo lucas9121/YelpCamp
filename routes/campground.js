@@ -18,6 +18,8 @@ const validateCampground = (req, res, next) => {
     }
 }
 
+
+/////////////// CRUD operations ////////////////
 router.get('/', async(req, res) => {
     const campgrounds = await Campground.find({})
     res.render('campgrounds/index', { what: "All Campgounds", campgrounds})

@@ -18,6 +18,12 @@ const validateReview = (req, res, next) => {
 }
 
 
+/////////////// CRUD operations ////////////////
+
+router.get('/', (req, res) => {
+    res.render('home', {what: 'Home'})
+})
+
 router.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     const review = new Review(req.body.review)
