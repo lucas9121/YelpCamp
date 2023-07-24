@@ -12,6 +12,7 @@ const PORT = process.env.port || 3000
 const Campground = require('./models/campground')
 const Review = require('./models/review')
 const campgroundRoute = require('./routes/campground')
+const reviewRoute = require('./routes/review')
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -44,19 +45,11 @@ app.use(methodOverride('_method'))
 
 
 
-// joi validation
-const validateReview = (req, res, next) => {
-    const {error} = reviewSchema.validate(req.body)
-    if(error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else {
-        next()
-    }
-}
+
 
 /////////////// CRUD operations ////////////////
 app.use('/campgrounds', campgroundRoute)
+app.use('/', reviewRoute )
 
 
 /////////////// CRUD operations ////////////////
@@ -65,23 +58,7 @@ app.get('/', (req, res) => {
 })
 
 
-///// Reviews
-app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id)
-    const review = new Review(req.body.review)
-    campground.reviews.push(review)
-    await review.save()
-    await campground.save()
-    res.redirect(`/campgrounds/${campground._id}`)
-}))
 
-app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req, res) => {
-    const {id, reviewId} = req.params
-    //$pull operator removes from an existing array all instances of a value that match the specified condition.
-    await Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}})
-    await Review.findByIdAndDelete(reviewId)
-    res.redirect(`/campgrounds/${id}`)
-}))
 
 
 
