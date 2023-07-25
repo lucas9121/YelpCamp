@@ -33,6 +33,9 @@ router.post('/', validateCampground, catchAsync(async (req, res, next) => {
     // if(!req.body.campgground) throw new ExpressError('Invalid Campground Data', 400)
     const newCampground = new Campground(req.body.campground)
     await newCampground.save()
+
+    //dismissible message
+    req.flash('success', 'Successfully made a new campground')
     res.redirect(`/campgrounds/${newCampground._id}`)
 }))
 
@@ -49,9 +52,13 @@ router.get('/:id/edit', catchAsync(async(req, res, next) => {
 
 router.put('/:id', validateCampground, catchAsync(async (req, res, next) => {
     const {id} = req.params
+
     // "run validators " update the document according to the schema rules.
     // "new" returns the updated document, rather than the original
     const campgground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {runValidators: true}, {new: true})
+
+    // dismisible message
+    req.flash('success', 'Sucessfully updated campground.')
     res.redirect(`/campgrounds/${campgground._id}`)
 }))
 
