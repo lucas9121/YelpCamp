@@ -78,6 +78,10 @@ app.use((req, res, next) => {
 app.use('/campgrounds', campgroundRoute)
 app.use('/campgrounds/:id/reviews', reviewRoute )
 
+app.get('/', (req, res) => {
+    res.render('home', {what: 'Home'})
+})
+
 
 
 
