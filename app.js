@@ -8,6 +8,9 @@ const session = require('express-session')
 const flash = require('connect-flash')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const User = require('./models/user')
 const PORT = process.env.port || 3000
 
 
@@ -63,6 +66,18 @@ app.use(session(sessionConfig))
 // flash messages
 app.use(flash())
 
+
+// passport package
+// https://www.passportjs.org/docs/
+app.use(passport.initialize())
+app.use(passport.session())
+// use local stratgy to activate the authenticate method on user meodel that was added by passport
+passport.use(new LocalStrategy(User.authenticate()))
+// stores user in session
+passport.serializeUser(User.serializeUser())
+// gets user out of session
+passport.deserializeUser(User.deserializeUser())
+
 app.use((req, res, next) => {
     // under every request will take flash and place under the key in locals
     res.locals.success  = req.flash('success')
@@ -80,6 +95,14 @@ app.use('/campgrounds/:id/reviews', reviewRoute )
 
 app.get('/', (req, res) => {
     res.render('home', {what: 'Home'})
+})
+
+app.get('/fakeUser', async (req, res) => {
+    const user = new User({email: 'test@gmail.com', username: 'testUSer'})
+    // Static methods for passport
+    // https://github.com/saintedlama/passport-local-mongoose
+    const newUser = await User.register(user, 'chicken')
+    res.send(newUser)
 })
 
 
