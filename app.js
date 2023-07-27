@@ -16,6 +16,7 @@ const PORT = process.env.port || 3000
 
 const campgroundRoute = require('./routes/campground')
 const reviewRoute = require('./routes/review')
+const usersRoute = require('./routes/users')
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -90,6 +91,7 @@ app.use((req, res, next) => {
 
 
 /////////////// Routes ////////////////
+app.use('/', usersRoute)
 app.use('/campgrounds', campgroundRoute)
 app.use('/campgrounds/:id/reviews', reviewRoute )
 
