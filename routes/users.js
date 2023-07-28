@@ -3,11 +3,17 @@ const router = express.Router()
 const passport = require('passport')
 const User = require('../models/user')
 const catchAsync = require('../utils/catchAsync')
+const {storeReturnTo} = require('../middleware')
 
+
+
+
+//////////////////// Routes ///////////////////////
 router.get('/register', (req, res) => {
     res.render('users/register', {what: 'New User'})
 })
 
+//// Register new user ////
 router.post('/register', catchAsync(async (req, res, next) => {
     try {
         const {email, username, password} = req.body
@@ -30,12 +36,22 @@ router.get('/login', (req, res) => [
     res.render('users/login', {what: 'Login'})
 ])
 
-// use local strategy for passport, flash a message if login fails and redirects to login page
-router.post('/login', passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}), (req, res) => {
-    req.flash('success', 'Welcome back!')
-    res.redirect('/campgrounds')
-})
+////  Log in user ////
+router.post('/login', 
+    // use the storeReturnTo middleware to save the returnTo value from session to res.locals
+    storeReturnTo,
+    // passport.authenticate logs the user in and clears req.session
+    passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}), 
+    // Now I can use res.locals.returnTo to redirect the user after login
+    (req, res) => {
+        req.flash('success', 'Welcome back!')
+        const redirectUrl = res.locals.returnTo || '/campgrounds'
+        res.redirect(redirectUrl)
+    }
+)
 
+
+////  Log out user ////
 router.get('/logout', (req, res, next) => {
     // req.logout requires a callback to handle errors
     req.logout(function (err) {
