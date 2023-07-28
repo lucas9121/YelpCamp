@@ -80,6 +80,8 @@ passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 
 app.use((req, res, next) => {
+    // in every request set user to current user
+    res.locals.currentUser = req.user
     // under every request will take flash and place under the key in locals
     res.locals.success  = req.flash('success')
     res.locals.error  = req.flash('error')
