@@ -1,5 +1,4 @@
-const Campgound = require('./models/campground')
-const Review = require('./models/review')
+const Campground = require('./models/campground')
 const {campgroundSchema, reviewSchema} = require('./schemas')
 const ExpressError = require('./utils/ExpressError')
 
