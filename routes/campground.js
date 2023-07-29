@@ -57,19 +57,27 @@ router.get('/:id/edit', isLoggedIn, catchAsync(async(req, res, next) => {
         req.flash('error', 'Campground not found!')
         return res.redirect('/campgrounds')
     }
+    if(!campground.author.equals(req.user._id)) {
+        req.flash('error', 'You do not have permision to do that')
+        return res.redirect(`/campgrounds/${req.params.id}`)
+    }
     res.render('campgrounds/edit', {what: `Update ${campground.title}`, campground})
 }))
 
 router.put('/:id', isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
     const {id} = req.params
-
+    const campground = await Campground.findById(id)
+    if(!campground.author.equals(req.user._id)) {
+        req.flash('error', 'You do not have permision to do that')
+        return res.redirect(`/campgrounds/${id}`)
+    }
     // "run validators " update the document according to the schema rules.
     // "new" returns the updated document, rather than the original
-    const campgground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {runValidators: true}, {new: true})
+    const updatedCampgground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {runValidators: true}, {new: true})
 
     // dismisible message
     req.flash('success', 'Sucessfully updated campground.')
-    res.redirect(`/campgrounds/${campgground._id}`)
+    res.redirect(`/campgrounds/${updatedCampgground._id}`)
 }))
 
 router.delete('/:id', isLoggedIn, catchAsync(async (req, res, next) => {
