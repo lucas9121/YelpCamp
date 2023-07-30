@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router({mergeParams: true})
 const Review = require('../models/review')
 const Campground = require('../models/campground')
-const {validateReview, isLoggedIn} = require('../middleware')
+const {validateReview, isLoggedIn, isReviewAuthor} = require('../middleware')
 const catchAsync = require('../utils/catchAsync')
 
 
@@ -21,7 +21,7 @@ router.post('/', isLoggedIn, validateReview, catchAsync(async (req, res) => {
     res.redirect(`/campgrounds/${campground._id}`)
 }))
 
-router.delete('/:reviewId', catchAsync(async (req, res) => {
+router.delete('/:reviewId', isLoggedIn, isReviewAuthor, catchAsync(async (req, res) => {
     const {id, reviewId} = req.params
     //$pull operator removes from an existing array all instances of a value that match the specified condition.
     await Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}})
