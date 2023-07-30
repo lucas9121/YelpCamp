@@ -30,7 +30,16 @@ router.post('/', isLoggedIn, validateCampground, catchAsync(async (req, res, nex
 
 
 router.get('/:id', catchAsync(async (req, res, next) => {
-    const campground = await Campground.findById(req.params.id).populate('reviews').populate('author')
+    // nested  reviews populate
+    const campground = await Campground.findById(req.params.id).populate({
+        //populate the all the reviews in campground
+        path:'reviews',
+        populate: {
+            // then populate the author of the reviews
+            path: 'author'
+        }
+        // populate author of campground
+    }).populate('author')
     if(!campground){ 
         req.flash('error', 'Campground not found!')
         return res.redirect('/campgrounds')
