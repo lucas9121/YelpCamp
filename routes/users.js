@@ -9,22 +9,19 @@ const {storeReturnTo} = require('../middleware')
 
 
 //////////////////// Routes ///////////////////////
-router.get('/register', users.registerForm)
-
 //// Register new user ////
-router.post('/register', catchAsync(users.register))
+router.route('/register')
+    .get(users.registerForm)
+    .post(catchAsync(users.register))
 
-router.get('/login', users.loginForm)
 
 ////  Log in user ////
-router.post('/login', 
-    // use the storeReturnTo middleware to save the returnTo value from session to res.locals
-    storeReturnTo,
-    // passport.authenticate logs the user in and clears req.session
-    passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}), 
-    // Now I can use res.locals.returnTo to redirect the user after login
-    users.login
-)
+router.route('/login')
+    .get(users.loginForm)
+    .post(storeReturnTo, // use the storeReturnTo middleware to save the returnTo value from session to res.locals
+    passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}), // logs the user in and clears req.session
+    users.login // Now I can use res.locals.returnTo to redirect the user after login
+    )
 
 
 ////  Log out user ////
