@@ -2,7 +2,7 @@
     <h1 class="text-center">New Campground</h1>
     <div class="col-6 offset-3">
         <% layout('layouts/boilerplate') %>
-        <form action="/campgrounds" class="needs-validation" method="POST" novalidate>
+        <form action="/campgrounds" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <!-- name format means that when data is sent everything in req.body will be stored under the campground. -->
@@ -26,8 +26,8 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="image">Image Url</label>
-                <input class="form-control" type="text" id="image" name="campground[image]" required>
+                <!-- <label class="form-label" for="image">Image Url</label> -->
+                <input type="file" name="image" multiple required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
