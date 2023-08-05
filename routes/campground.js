@@ -6,7 +6,8 @@ const campgrounds = require('../controllers/campground')
 // Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files.
 // https://www.npmjs.com/package/multer
 const multer = require('multer')
-const upload = multer({dest: 'upload/'})
+const { storage } = require('../cloudinary/index')
+const upload = multer({ storage })
 
 const catchAsync = require('../utils/catchAsync')
 
@@ -14,8 +15,8 @@ const catchAsync = require('../utils/catchAsync')
 /////////////// CRUD operations routes ////////////////
 router.route('/')
     .get(catchAsync(campgrounds.index))
-    .post(isLoggedIn, validateCampground, catchAsync(campgrounds.create))
-
+    // upload can't go before validation in the long run. Need to fix this.
+    .post(isLoggedIn, upload.array('image'), validateCampground, catchAsync(campgrounds.create))
 router.get('/new', isLoggedIn, campgrounds.newForm)
 
 router.route('/:id')
