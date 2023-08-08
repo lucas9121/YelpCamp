@@ -18,7 +18,7 @@ function newForm(req, res) {
 async function create(req, res, next) {
     // if(!req.body.campgground) throw new ExpressError('Invalid Campground Data', 400)
     const newCampground = new Campground(req.body.campground)
-    newCampground.images = req.files.map(f => ({ url: f.path, fileName: f.fileName }))
+    newCampground.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
     newCampground.author = req.user._id
     await newCampground.save()
     //dismissible message
