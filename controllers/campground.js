@@ -60,11 +60,16 @@ async function update(req, res, next) {
     const {id} = req.params
     // "run validators " update the document according to the schema rules.
     // "new" returns the updated document, rather than the original
-    const updatedCampgground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {runValidators: true}, {new: true})
+    const updatedCampground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {runValidators: true}, {new: true})
+    // new images array.
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }))
+    // ensures pictures are pushed into existing picture array.
+    updatedCampground.images.push(...imgs)
 
+    await updatedCampground.save()
     // dismisible message
     req.flash('success', 'Sucessfully updated campground.')
-    res.redirect(`/campgrounds/${updatedCampgground._id}`)
+    res.redirect(`/campgrounds/${updatedCampground._id}`)
 }
 
 // Delete
