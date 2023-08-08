@@ -17,6 +17,8 @@ router.route('/')
     .get(catchAsync(campgrounds.index))
     // upload can't go before validation in the long run. Need to fix this.
     .post(isLoggedIn, upload.array('image'), validateCampground, catchAsync(campgrounds.create))
+
+    
 router.get('/new', isLoggedIn, campgrounds.newForm)
 
 router.route('/:id')
