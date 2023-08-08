@@ -3,7 +3,7 @@
     <h1 class="text-center">Edit Campground</h1>
     <div class="col-6 offset-3">
         <% layout('layouts/boilerplate') %>
-        <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" class="needs-validation" novalidate>
+        <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <!-- name format means that when data is sent everything in req.body will be stored under the campground. -->
@@ -15,8 +15,8 @@
                 <input class="form-control" type="text" id="location" name="campground[location]" value="<%= campground.location %>" required>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="image">Image Url</label>
-                <input class="form-control" type="text" id="image" name="campground[image]" value="<%= campground.image %>" required>
+                <label class="form-label" for="image">Add Images</label>
+                <input class="form-control" type="file" id="image" name="image" multiple>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="price">Campground Price</label>
