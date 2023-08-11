@@ -1,4 +1,5 @@
 const Campground = require('../models/campground')
+const {cloudinary} = require('../cloudinary')
 
 module.exports = {index, newForm, create, show, edit, update, Delete}
 
@@ -65,8 +66,16 @@ async function update(req, res, next) {
     const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }))
     // ensures pictures are pushed into existing picture array.
     updatedCampground.images.push(...imgs)
-
     await updatedCampground.save()
+    if(req.body.deleteImages){
+        // loops through delete images array
+        for(let filename of req.body.deleteImages){
+            // delete image from cloudinary
+            await cloudinary.uploader.destroy(filename)
+        }
+        // update campground on Mongo without immage
+        await updatedCampground.updateOne({$pull: {images: {filename: {$in: req.body.deleteImages}}}})
+    }
     // dismisible message
     req.flash('success', 'Sucessfully updated campground.')
     res.redirect(`/campgrounds/${updatedCampground._id}`)
