@@ -10,7 +10,7 @@
                         <% campground.images.forEach((image, i) => { %>
                             <!-- Only one image can have active class -->
                             <div class="carousel-item h-100  <%= i === 0 && 'active' %>">
-                                <img src="<%= image.url %>" class="d-block w-100 h-100" alt="">
+                                <img src="<%= image.display %>" class="d-block w-150 h-100" alt="">
                             </div>
                         <% }) %>
                     </div>
