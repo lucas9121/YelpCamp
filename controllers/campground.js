@@ -32,15 +32,18 @@ async function create(req, res, next) {
         query: req.body.campground.location,
         limit: 1
     }).send()
-    console.log(geoData.body.features[0].geometry.coordinates)
-    res.send('OK!!!!')
-    // const newCampground = new Campground(req.body.campground)
-    // newCampground.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
-    // newCampground.author = req.user._id
-    // await newCampground.save()
-    // //dismissible message
-    // req.flash('success', 'Successfully made a new campground')
-    // res.redirect(`/campgrounds/${newCampground._id}`)
+    console.log(geoData.body.features[0].geometry)
+    const newCampground = new Campground(req.body.campground)
+    // adds geodata location
+    newCampground.geometry = geoData.body.features[0].geometry
+    // adds file url image from cloudinary
+    newCampground.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
+    //set author to login person
+    newCampground.author = req.user._id
+    await newCampground.save()
+    //dismissible message
+    req.flash('success', 'Successfully made a new campground')
+    res.redirect(`/campgrounds/${newCampground._id}`)
 }
 
 // Show
