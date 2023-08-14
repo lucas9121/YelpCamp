@@ -120,7 +120,7 @@ app.get('/fakeUser', async (req, res) => {
 
 
 //catch all
-app.all('/*', (req, res, next) => {
+app.get('/*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
 })
 
