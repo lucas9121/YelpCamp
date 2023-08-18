@@ -101,6 +101,7 @@
 <!-- ejs sythax error workaround -->
 <input type="hidden" id="coordinates1" value="<%= campground.geometry.coordinates[0] %>">
 <input type="hidden" id="coordinates2" value="<%= campground.geometry.coordinates[1] %>">
+<input type="hidden" id="campTitle" value="<%= campground.title %>">
 
 <!-- ejs token template to javascript file -->
 <script>
@@ -114,6 +115,7 @@
     // workaround
     const coordinatesEl1 = document.getElementById('coordinates1');
     const coordinatesEl2 = document.getElementById('coordinates2');
+    const campgroundTitle = document.getElementById('campTitle').value;
     const coordinates = [JSON.parse(coordinatesEl1.value), JSON.parse(coordinatesEl2.value)]
 </script>
 
