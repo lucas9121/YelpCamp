@@ -36,9 +36,9 @@ map.on('load', () => {
                 'step',
                 ['get', 'point_count'],
                 '#51bbd6',
-                4,
+                8,
                 '#f1f075',
-                7,
+                20,
                 '#f28cb1'
             ],
             'circle-radius': [
@@ -103,9 +103,14 @@ map.on('load', () => {
     // description HTML from its properties.
     map.on('click', 'unclustered-point', (e) => {
         const coordinates = e.features[0].geometry.coordinates.slice();
-        const mag = e.features[0].properties.mag;
-        const tsunami =
-        e.features[0].properties.tsunami === 1 ? 'yes' : 'no';
+        // console.log(coordinates[0].toFixed(2))
+        const clickedCampground = campgrounds.features.find((camp, idx) => {
+            // console.log(idx)
+            const campCoordinates = camp.geometry.coordinates;
+            if(campCoordinates[0].toFixed(2) === coordinates[0].toFixed(2) && campCoordinates[1].toFixed(2) === coordinates[1].toFixed(2)) console.log(idx)
+            return campCoordinates[0].toFixed(2) === coordinates[0].toFixed(2) && campCoordinates[1].toFixed(2) === coordinates[1].toFixed(2);
+        });
+
         
         // Ensure that if the map is zoomed out such that
         // multiple copies of the feature are visible, the
@@ -117,7 +122,7 @@ map.on('load', () => {
         new mapboxgl.Popup()
         .setLngLat(coordinates)
         .setHTML(
-            `name: ${mag}<br>Was there a tsunami?: ${tsunami}`
+            `name: ${clickedCampground.title}<br>price: $${clickedCampground.price}`
         )
         .addTo(map);
     });
