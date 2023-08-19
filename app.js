@@ -121,6 +121,7 @@ app.get('/fakeUser', async (req, res) => {
 
 //catch all
 app.get('/*', (req, res, next) => {
+    console.log('Catch-all route triggered:', req.url);
     next(new ExpressError('Page Not Found', 404))
 })
 
