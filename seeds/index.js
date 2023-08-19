@@ -20,19 +20,28 @@ db.once("open", () => {
 
 
 
-
 // Upload the image to Cloudinary
 const seedDB = async () => {
     try {
         const duplicates = []
+        const duplicateLocation = []
         await Campground.deleteMany({})
         // Delete all images in the YelpCamp folder
         const deleteResult = await cloudinary.api.delete_resources_by_prefix('YelpCamp/');
         console.log(`Deleted ${deleteResult.deleted} images`);
-        for(let i = 0; i < 50; i++){
+        for(let i = 0; i < 200; i++){
             const randomizer = arr => arr[Math.floor(Math.random() * arr.length)]
             const randomLocation = randomizer(cities)
             const imageUrl = randomizer(images)
+            // check if coordinates already exist
+            const duplicateCity = duplicateLocation.find(c => c.latitude === randomLocation.latitude && c.longitude === randomLocation.longitude)
+            if(duplicateCity){
+                randomLocation.latitude += 0.5
+                randomLocation.longitude += 0.5
+                duplicateLocation.push(randomLocation)
+            } else {
+                duplicateLocation.push(randomLocation)
+            }
             let uploadedImage = {}
             //check if duplicate array includes immage
             const duplicateImage = duplicates.find(res => res.img === imageUrl)
