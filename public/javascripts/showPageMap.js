@@ -7,6 +7,8 @@ const map = new mapboxgl.Map({
     zoom: 13, // starting zoom
 });
 
+map.addControl(new mapboxgl.NavigationControl({showCompass: false}));
+
 new mapboxgl.Marker()
     // adds ,arker to map
     .setLngLat(coordinates)
