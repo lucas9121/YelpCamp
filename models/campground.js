@@ -16,6 +16,10 @@ ImageSchema.virtual('display').get(function(){
     return this.url.replace('/upload', '/upload/w_470,h_350')
 })
 
+
+// mongoose will add virtual to JSON data
+const opts = { toJSON: { virtuals: true } }
+
 const CampgroundSchema = new Schema({
     title: String,
     images: [ImageSchema],
@@ -43,6 +47,16 @@ const CampgroundSchema = new Schema({
             ref: 'Review'
         }
     ]
+}, opts)
+
+// nested virtual to add properties key to schema
+CampgroundSchema.virtual('properties.popUpMarkup').get(function () {
+    return `
+        <div class="d-flex flex-column align-items-center pt-1 gap-1">
+            <strong><a href="/campgrounds/${this._id}">${this.title}</a></strong>
+            <small class="text-muted fw-bold"> $${this.price}/night</small>
+        </div>
+    `
 })
 
 //https://mongoosejs.com/docs/middleware.html
