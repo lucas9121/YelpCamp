@@ -36,19 +36,19 @@ map.on('load', () => {
                 'step',
                 ['get', 'point_count'],
                 '#51bbd6',
-                8,
+                10,
                 '#f1f075',
-                20,
+                40,
                 '#f28cb1'
             ],
             'circle-radius': [
                 'step',
                 ['get', 'point_count'],
-                20,
-                100,
-                30,
-                750,
-                40
+                15, // circle radius
+                10, // number of clusters
+                20, // circle radius
+                40, // number of clusters
+                30 // circle radius
             ]
         }
     });
@@ -102,15 +102,8 @@ map.on('load', () => {
     // the location of the feature, with
     // description HTML from its properties.
     map.on('click', 'unclustered-point', (e) => {
+        const {popUpMarkup} = e.features[0].properties
         const coordinates = e.features[0].geometry.coordinates.slice();
-        // console.log(coordinates[0].toFixed(2))
-        const clickedCampground = campgrounds.features.find((camp, idx) => {
-            // console.log(idx)
-            const campCoordinates = camp.geometry.coordinates;
-            if(campCoordinates[0].toFixed(2) === coordinates[0].toFixed(2) && campCoordinates[1].toFixed(2) === coordinates[1].toFixed(2)) console.log(idx)
-            return campCoordinates[0].toFixed(2) === coordinates[0].toFixed(2) && campCoordinates[1].toFixed(2) === coordinates[1].toFixed(2);
-        });
-
         
         // Ensure that if the map is zoomed out such that
         // multiple copies of the feature are visible, the
@@ -121,9 +114,7 @@ map.on('load', () => {
         
         new mapboxgl.Popup()
         .setLngLat(coordinates)
-        .setHTML(
-            `name: ${clickedCampground.title}<br>price: $${clickedCampground.price}`
-        )
+        .setHTML(popUpMarkup)
         .addTo(map);
     });
     
