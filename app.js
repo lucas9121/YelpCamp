@@ -12,6 +12,7 @@ const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
+const mongoSanitize = require('express-mongo-sanitize');
 const User = require('./models/user')
 const PORT = process.env.port || 3000
 
@@ -38,6 +39,11 @@ db.once("open", () => {
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
+
+
+// Safety Mongo Injection
+// searches for any keys in objects that begin with a "$" sign or contain a ".", from req.body, req.query or req.params
+app.use(mongoSanitize());
 
 
 
