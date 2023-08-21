@@ -19,7 +19,7 @@ const extension = (joi) => ({
                     allowedAttributes: {},
                 })
                 // check if there is a difference between input and sanitized output
-                if(clean !== value) return helpers.console.error('string.escapeHTML', {value});
+                if(clean !== value) return helpers.error('string.escapeHTML', {value});
                 return clean;
             }
         }
