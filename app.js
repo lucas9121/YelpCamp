@@ -61,11 +61,13 @@ app.use(express.static(path.join(__dirname, 'public')))
 /////// using cookies ////////
 // https://owasp.org/www-community/
 const sessionConfig = {
+    name: 'session', // changing the name of the cookie for security purposes
     secret:'testsecret',
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true, // default is set to true
+        // secure: true, // only works in https
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7,
     }
