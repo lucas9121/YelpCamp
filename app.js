@@ -101,13 +101,15 @@ app.use((req, res, next) => {
 
 
 /////////////// Routes ////////////////
+app.get('/', (req, res) => {
+    res.render('home', {what: 'Home'})
+})
+
+
 app.use('/', usersRoute)
 app.use('/campgrounds', campgroundRoute)
 app.use('/campgrounds/:id/reviews', reviewRoute )
 
-app.get('/', (req, res) => {
-    res.render('home', {what: 'Home'})
-})
 
 app.get('/fakeUser', async (req, res) => {
     const user = new User({email: 'test@gmail.com', username: 'testUSer'})
