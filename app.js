@@ -171,8 +171,11 @@ app.get('/fakeUser', async (req, res) => {
 })
 
 
-
-
+// no favicon
+app.use('/favicon.ico', (req, res, next) => {
+    // Ignore the request and do nothing
+    return res.status(204).end();
+  });
 
 
 
