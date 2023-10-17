@@ -22,6 +22,9 @@ const campgroundRoute = require('./routes/campground')
 const reviewRoute = require('./routes/review')
 const usersRoute = require('./routes/users')
 
+//session storage
+const MongoDBStore = require("connect-mongo")
+
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -60,8 +63,23 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 
 /////// using cookies ////////
+
+const store = MongoDBStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    // limits number of saves in case data hasn't changed
+    touchAfter: 24 * 60 * 60, // every 24 hours
+    crypto: {
+        secret: 'testsecret'
+    }
+});
+
+store.on("error", function(e) {
+    console.log("SESSOIN STORE ERROR", e)
+})
+
 // https://owasp.org/www-community/
 const sessionConfig = {
+    store,
     name: 'session', // changing the name of the cookie for security purposes
     secret:'testsecret',
     resave: false,
