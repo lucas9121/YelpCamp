@@ -63,7 +63,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 
 /////// using cookies ////////
-
+const secret = process.env.SECRET
 const store = MongoDBStore.create({
     mongoUrl: process.env.MONGO_URI,
     // limits number of saves in case data hasn't changed
@@ -81,7 +81,7 @@ store.on("error", function(e) {
 const sessionConfig = {
     store,
     name: 'session', // changing the name of the cookie for security purposes
-    secret:'testsecret',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
